@@ -1,0 +1,9 @@
+AuthUserFile /export/mailgrp2_b/cenpas/p.txt
+AuthGroupFile /dev/null
+AuthName "Members Only"
+AuthType Basic
+
+SetEnv BASE_DIR /export/mailgrp2_b/cenpas/civilproject/attendance
+SetEnv BASE_URL https://www2.mech-eng.leeds.ac.uk/civilprojects/attendance
+
+require valid-user
