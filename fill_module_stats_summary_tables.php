@@ -163,7 +163,8 @@ if ($access) {
             //`module_code` varchar(256) NOT NULL,
             //`module_prefix` varchar(5) NOT NULL,
             //`level` INTEGER NOT NULL,
-            $pos = strpos($module_table_name,"_",4)+1;
+            //$pos = strpos($module_table_name,"_",4)+1;
+            $pos = strpos($module_table_name,"_",4+strlen($school_short_name_lc))+1;
             $pos2 = strpos($module_table_name,"_",$pos)+1;
             $module_code = substr($module_table_name,$pos,$pos2-$pos-1);
             $module_level = substr($module_table_name,$pos+4,1);

@@ -19,8 +19,9 @@ if (strlen($DB_ADMIN_USER_VAR) > 1) {
 if ((strlen($DB_ADMIN_USER_VAR) < 2) || ($first_DB_ADMIN_USERS_CHARS == "{{")) {
     $hostname = "localhost";        /* This is the hostname on which your MySQL is running */
     //$dbName = "civ_meditadb1";
-    $dbName = "civ_projectdb2";
+    //$dbName = "civ_projectdb2";
     //$dbName = "civ_meditadb1_empty";
+    $dbName = "ackee";
     $dbusername = "civ_project";
     $password = "EngCivilLeeds";
 } else {
@@ -117,6 +118,6 @@ try {
     //echo "$table_name doesn't exist in database $dbName\n";
     //
     if (empty($first_use)) {
-        echo("<DIV>This appears to be the first time this site has been used. <BR>Go here to setup the database: <a href='./admin_first_use.php'>First use setup</a>");
+        echo("<DIV>This appers to be the first time this site has been used. <BR>Go here to setup the database: <a href='./admin_first_use.php'>First use setup</a>");
     }
 }

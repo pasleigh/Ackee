@@ -108,7 +108,7 @@ if ($access) {
 
             // Get unique list of student IDs
             $query = "SELECT id, sid, module_table FROM $student_module_table WHERE 1";//sid LIKE '2010%'";
-
+            //var_dump($query);echo("<BR>");
             try {
                 $results = $db->query($query);
             } catch (PDOException $ex) {
@@ -120,13 +120,14 @@ if ($access) {
             }
             $recs = $results->fetchAll();
 
+            //var_dump($recs);
             foreach ($recs as $rec) {
 
                 $id = $rec["id"];
                 $sid = $rec["sid"];
                 $module_table = $rec["module_table"];
                 $raw_module_table = "raw_" . $module_table;
-
+                //echo("id=$id  sid=$sid module_table=$module_table<BR>\n");
                 // get all teh modules for thsi student
                 $query = "SELECT * FROM $raw_module_table WHERE sid='$sid' AND date_time_start BETWEEN '$date1' AND '$date2'";
 

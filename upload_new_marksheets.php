@@ -9,12 +9,18 @@
 (@include_once("./staff_student_functions.php")) OR die("Cannot staff_student_functions file<BR>");
 (@include_once("./table_functions.php")) OR die("Cannot read table_functions file<BR>");
 
-(@include_once('./PHPExcel-1.8/Classes/PHPExcel.php')) OR die("Cannot read PHPExcel.php file<BR>");
-(@include_once('./PHPExcel-1.8/Classes/PHPExcel/IOFactory.php')) OR die("Cannot read IOFactory.php file<BR>");
+//(@include_once('./PHPExcel-1.8/Classes/PHPExcel.php')) OR die("Cannot read PHPExcel.php file<BR>");
+//(@include_once('./PHPExcel-1.8/Classes/PHPExcel/IOFactory.php')) OR die("Cannot read IOFactory.php file<BR>");
 
 (@include_once("./iqr.php")) OR die("Cannot find this file to include: iqr.php<BR>");
 
 $display_block = "";
+
+use PhpOffice\PhpSpreadsheet\IOFactory;
+use PhpOffice\PhpSpreadsheet\Spreadsheet;
+
+error_reporting(E_ALL ^ E_NOTICE);
+require_once  './vendor/autoload.php';
 
 // Check the admin level - done in setup-params
 
@@ -99,7 +105,10 @@ if ($access) {
 
             if (!$_FILES['attend_xls']['error']) {
                 if ($attend_xls_file_name != "") {
-                    $objPHPExcelModules = PHPExcel_IOFactory::load($attend_xls_file_tmp);
+                    $PHP_EXCEL_filetype = IOFactory::identify($attend_xls_file_tmp);
+                    $module_xls_PHPExcel_file_type = "PHPExcel file type: $PHP_EXCEL_filetype<BR>";
+                    $objPHPExcelModules = IOFactory::load($attend_xls_file_tmp);
+                    //$objPHPExcelModules = PHPExcel_IOFactory::load($attend_xls_file_tmp);
                     //$num_modules = $objPHPExcelModules->getSheetCount();
                     create_module_names_table_structure($db, $year_end, $level, $version, $module_names_table);
 
@@ -110,9 +119,12 @@ if ($access) {
                     foreach ($objPHPExcelModules->getWorksheetIterator() as $worksheet) {
                         // Check for "Exam Title" in cell C1
                         // check for work in cel A1
-                        $KEY_WORD = $worksheet->getCellByColumnAndRow(1, 1)->getValue();
+                        //$KEY_WORD = $worksheet->getCellByColumnAndRow(1, 1)->getValue();
+                        $col = 1;
+                        $row = 1;
+                        $KEY_WORD = $worksheet->getCell([$col, $row])->getValue();
                         if ($KEY_WORD == "PIDM_KEY") {
-                            // Mech sheet
+                            // Mech sheet i.e. the TBL_ files
                         }elseif($KEY_WORD == "ACTV_NAME") {
                             // Civil Sheet
                             $activity_col = 1;
@@ -126,16 +138,17 @@ if ($access) {
                             $sid_col = 8;
                             $student_name_col = 9;
                             $student_family_name_col = 10;
-                            for($row = 1; $row < 10 ; $row++){
-                                $activity = $worksheet->getCellByColumnAndRow($activity_col, $row)->getValue();
-                                $date = $worksheet->getCellByColumnAndRow($date_col, $row)->getValue();
-                                $start_time = $worksheet->getCellByColumnAndRow($start_time_col, $row)->getValue();
-                                $end_time = $worksheet->getCellByColumnAndRow($end_time_col, $row)->getValue();
-                                $attend_code1 = $worksheet->getCellByColumnAndRow($attend_code1_col, $row)->getValue();
-                                $attend_code2 = $worksheet->getCellByColumnAndRow($attend_code2_col, $row)->getValue();
-                                $sid = $worksheet->getCellByColumnAndRow($sid_col, $row)->getValue();
-                                $student_name = $worksheet->getCellByColumnAndRow($student_name_col, $row)->getValue();
-                                $student_family_name = $worksheet->getCellByColumnAndRow($student_family_name_col, $row)->getValue();
+                            $highestRow = 10;//$worksheet->getHighestRow();
+                            for($row = 2; $row <= $highestRow ; $row++){
+                                $activity = $worksheet->getCell([$activity_col, $row])->getValue();
+                                $date = $worksheet->getCell([$date_col, $row])->getValue();
+                                $start_time = $worksheet->getCell([$start_time_col, $row])->getValue();
+                                $end_time = $worksheet->getCell([$end_time_col, $row])->getValue();
+                                $attend_code1 = $worksheet->getCell([$attend_code1_col, $row])->getValue();
+                                $attend_code2 = $worksheet->getCell([$attend_code2_col, $row])->getValue();
+                                $sid = $worksheet->getCell([$sid_col, $row])->getValue();
+                                $student_name = $worksheet->getCell([$student_name_col, $row])->getValue();
+                                $student_family_name = $worksheet->getCell([$student_family_name_col, $row])->getValue();
 
                                 echo("$row<BR>");
                                 echo("Activity      : $activity<BR>");
@@ -154,7 +167,7 @@ if ($access) {
                             //echo("Module: $module_code<BR>\n");
                             $col = 2;
                             $row = 2;
-                            $name_cell = $worksheet->getCellByColumnAndRow($col, $row);
+                            $name_cell = $worksheet->getCell([$col, $row]);
                             $module_name = $name_cell->getValue();
                             $col = 9;
                             $row = 1;
@@ -179,7 +192,7 @@ if ($access) {
                             echo("Module table: $module_table.<BR>\n");
 
                             $highestColumn = $worksheet->getHighestColumn(); // e.g 'F'
-                            $highestColumnIndex = PHPExcel_Cell::columnIndexFromString($highestColumn);
+                            $highestColumnIndex = \PhpOffice\PhpSpreadsheet\Cell\Coordinate::columnIndexFromString($highestColumn);
 
                             // find the last mark row
                             $highestRow = $worksheet->getHighestRow();
@@ -190,7 +203,7 @@ if ($access) {
                             // find the registry mark column
                             $row = $m_labels_row;
                             for ($col = 1; $col < $highestColumnIndex; $col++) {
-                                $value = $worksheet->getCellByColumnAndRow($col, $row)->getValue();
+                                $value = $worksheet->getCell([$col, $row])->getValue();
                                 if ($value == "Registry Mark") {
                                     $m_reg_mark_col = $col;
                                     break;
@@ -200,7 +213,7 @@ if ($access) {
 
                             // find the last civil student data row
                             for ($row = 1; $row <= $highestRow; ++$row) {
-                                $value1 = $worksheet->getCellByColumnAndRow($m_sid_col + 1, $row)->getValue();
+                                $value1 = $worksheet->getCellw([$m_sid_col + 1, $row])->getValue();
                                 if ($value1 == 'Statistics') {
                                     $m_last_mark_row = $row - 1;
                                     break;

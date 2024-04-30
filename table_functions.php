@@ -863,7 +863,7 @@ function create_definition_table_structure($db)
     $query = <<<SQL
     CREATE TABLE IF NOT EXISTS `definition` (
     `id` int(11) NOT NULL AUTO_INCREMENT,
-    `school_short_name` varchar(10) NOT NULL,
+    `school_short_name` varchar(20) NOT NULL,
     `school_title` varchar(50) NOT NULL,
     `default_module_prefix` varchar(5) NOT NULL,
     `header_image_name` varchar(50) NOT NULL,

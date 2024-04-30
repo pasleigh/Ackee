@@ -94,8 +94,14 @@ foreach($setup_ress as $setup_res) {
     $num_students = $setup_res['num_students'];
     $visible = $setup_res['visible'];
 
-    $low_attendance_value[$id] = $setup_res['low_attendance_value'];
-    $low_numbers_value[$id] = $setup_res['low_numbers_value'];
+    $low_attendance_value[$id] = 0;
+    if(array_key_exists('low_attendance_value',$setup_res)){
+        $low_attendance_value[$id] = $setup_res['low_attendance_value'];
+    }
+    $low_numbers_value[$id] = 0;
+    if(array_key_exists('low_numbers_value',$setup_res)){
+        $low_numbers_value[$id] = $setup_res['low_numbers_value'];
+    }
 
     // setup the weeks
     $term_1_sunday_start =  $setup_res['term_1_sunday_start'];

@@ -163,7 +163,7 @@ if ($access) {
         // Now find the distinct students on these module
         foreach ($mod_recs as $mod_rec) {
             $module_table_name = $mod_rec[0];
-            $pos = strpos($module_table_name,"_",4)+1;
+            $pos = strpos($module_table_name,"_",4+strlen($school_short_name_lc))+1;
             $pos2 = strpos($module_table_name,"_",$pos);
             $module_code = substr($module_table_name,$pos,$pos2-$pos);
             $module_code_uc = strtoupper($module_code);

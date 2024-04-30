@@ -29,7 +29,12 @@ function GetLevelFromModuleList($module_list){
             $c = array_count_values($levels);
             $level = array_search(max($c), $c);
         }else{
-            $level = $levels[0];
+            if($levels){
+                $level = $levels[0];
+            }else{
+                $level = 0;
+            }
+
             if(!is_numeric($level)){
                 $level = 0;
             }
