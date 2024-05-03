@@ -86,7 +86,7 @@ if ($access) {
     unset($results_data);
 
 // Display the dropdowns to select the module and year
-    $display_block .= "<h1>Select the data you want to view/modify ...</H1>\n";
+    $display_block .= "<h1>Select the raw data you want to process or enter new raw data ...</H1>\n";
 
     $display_block .= "<form id='selectschool' method=\"post\" action=\"$_SERVER[PHP_SELF]\">\n";
 
@@ -97,23 +97,27 @@ if ($access) {
     $display_block .= "<select class='form-control' name='pm_id' id='pm_id'>\n";
     $display_block .= "<option selected disabled>Choose a raw attendance data set</option>\n";
     $display_block .= $year_list_options;
-    $display_block .= "</select>\n</P>";
+    $display_block .= "</select>\n";
+    $display_block .= "     </div>";
+    $display_block .= "    <div class='col-sm-6'></div>\n";
+    $display_block .= "</div></p>\n";
 
-
-
+    $display_block .= "<div class='row'>\n";
+    $display_block .= "    <div class='col-sm-6'>\n";
     $display_block .= "\n<input type=\"hidden\" name=\"op\" value=\"select\">\n";
     //$display_block .= "<input type='hidden' name='pm_id' value='$pm_id_s'>\n";
 
-    $display_block .= "<p><input type='submit' class=\"btn btn-success btn-block\" id=\"submitbutton\" name=\"submit\" value=\"View summary of the selected data\"></p>\n";
-    $display_block .= "</div>";
+    $display_block .= "<p><input type='submit' class=\"btn btn-success btn-block\" id=\"submitbutton\" name=\"submit\" value=\"View processing functions for selected raw data\"></p>\n";
+    $display_block .= "     </div>";
+    $display_block .= "    <div class='col-sm-6'><a href='load_raw_data_csv.php' class='btn btn-info btn-block' role='button'>Load NEW raw data</a></div>\n";
     $display_block .= "</div>";
     $display_block .= "</form>\n";
 
     if ($POST_OP == "select" && $pm_id != null) {
-        $display_block .= "<div class='row'>";
+        $display_block .= "<div id='process_raw_data_block' class='row'>";
         $display_block .= "<div class='col-xs-12'>";
         $display_block .= "<div class='jumbotron'>";
-        $display_block .= "<h2>System Level admin functions</h2>";
+        $display_block .= "<h2>Function sequence required to process raw data</h2>";
 
         $display_block .= "<div class='row'>";
         $display_block .= "<div class='col-xs-6'>";
@@ -128,23 +132,31 @@ if ($access) {
         $display_block .= "<a href='./fill_weekly_data.php?pm_id=$pm_id'  class='btn btn-primary btn-block'>7 - Populate the weekly attendance data</a>\n";
         $display_block .= "</DIV>\n";
         $display_block .= "<div class='col-xs-6'>";
-        $display_block .= "<a href='./fill_module_stats_summary_filtered_tables.php?pm_id=$pm_id'  class='btn btn-info btn-block'>8 - Populate the <em>filtered</em> module statistics tables </a>\n";
+        $display_block .= "<a href='./edit_filter_values.php?pm_id=$pm_id'  class='btn btn-info btn-block'>8.1 - Edit filter parameters</a>\n";
+        $display_block .= "<a href='./fill_module_stats_summary_filtered_tables.php?pm_id=$pm_id'  class='btn btn-info btn-block'>8.2 - Populate the <em>filtered</em> module statistics tables </a>\n";
         $display_block .= "<a href='./create_student_list_filtered_tables.php?pm_id=$pm_id'  class='btn btn-info btn-block'>9 - Create the <em>filtered</em> student list tables from raw data</a>\n";
         $display_block .= "<a href='./fill_filtered_weekly_data.php?pm_id=$pm_id'  class='btn btn-info btn-block'>10 - Populate the  <em>filtered</em> weekly attendance data</a>\n";
-        $display_block .= "<a href='./todo.php'  class='btn btn-info btn-block'>not functional yet</a>\n";
+        //$display_block .= "<a href='./todo.php'  class='btn btn-info btn-block'>not functional yet</a>\n";
         $display_block .= "</DIV>\n";
         $display_block .= "</DIV>\n";
         $display_block .= "<br>";
 
+        //$display_block .= "<div class='row'>";
+        //$display_block .= "<div class='col-xs-6'>";
+        //$display_block .= "<a href='./edit_filter_values.php?pm_id=$pm_id'  class='btn btn-info btn-block'>Edit filter parameters</a>\n";
+        //$display_block .= "</DIV>\n";
+        //$display_block .= "<div class='col-xs-6'>";
+        //$display_block .= "</DIV>\n";
+        //$display_block .= "</DIV>\n";
+        //$display_block .= "<br>";
+
         $display_block .= "<div class='row'>";
-        $display_block .= "<div class='col-xs-6'>";
-        $display_block .= "<a href='./edit_filter_values.php?pm_id=$pm_id'  class='btn btn-info btn-block'>Edit Filter Values</a>\n";
+        $display_block .= "<div class='col-xs-12'>";
+        $display_block .= "<a href='./delete_module_tables.php?pm_id=$pm_id'  class='btn btn-warning btn-block'>DELETE ALL DATA  - DO NOT DO THIS UNLESS YOUARE RESETTING THE SYSTEM. There is NO second chance</a>\n";
         $display_block .= "</DIV>\n";
-        $display_block .= "<div class='col-xs-6'>";
-        $display_block .= "<a href='./delete_module_tables.php?pm_id=$pm_id'  class='btn btn-warning btn-block'>DELETE ALL module tables - Be Careful, there is NO second chance</a>\n";
         $display_block .= "</DIV>\n";
 
-        $display_block .= "</DIV>\n";
+
         $display_block .= "</DIV>\n";
         $display_block .= "</DIV>\n";
 
@@ -194,6 +206,9 @@ $(document).ready(function(){
         docCookies.setItem("pm_id", pm_id, seconds);
         return true; // return false to cancel form action
     });
+    $('#pm_id').on('change', function(){
+        $('#process_raw_data_block').hide()
+    })
 })
 </script>
 </BODY>
