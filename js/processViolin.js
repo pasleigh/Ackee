@@ -66,7 +66,8 @@ function processViolin(step, precision, densityWidth, ...args) {
       jStat.quartiles(e)[0],
       jStat.quartiles(e)[1],
       jStat.quartiles(e)[2],
-      Math.max(...e)
+      Math.max(...e),
+        jStat.mean(e).toFixed(1)
     );
     index++;
   });

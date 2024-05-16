@@ -14,8 +14,8 @@
     <script src="https://code.highcharts.com/highcharts-more.js"></script>
     <script src="https://code.highcharts.com/modules/data.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/jstat@latest/dist/jstat.min.js"></script>
-    <script src="https://marketing-demo.s3-eu-west-1.amazonaws.com/violinFunction/processViolin.js"></script>
-    <!--<script src="./js/processViolin.js"></script>-->
+    <!--<script src="https://marketing-demo.s3-eu-west-1.amazonaws.com/violinFunction/processViolin.js"></script>-->
+    <script src="./js/processViolin.js"></script>
     <style>
         #container {
             max-width: 1500px;
@@ -125,6 +125,8 @@
                             stat[this.series.index][1] +
                             " kg</td></tr><tr><td>Min:</td><td>" +
                             stat[this.series.index][0] +
+                            " kg</td></tr><tr><td>Mean:</td><td>" +
+                            stat[this.series.index][5] +
                             " kg</td></tr></table>"
                         );
                     }
