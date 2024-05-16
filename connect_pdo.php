@@ -2,7 +2,9 @@
 
 /* Make connection to database */
 try{
-    $db = new PDO("mysql:host=$hostname; dbname=$dbName; charset=utf8", $dbusername, $password);
+    $db = new PDO("mysql:host=$hostname; dbname=$dbName; charset=utf8", $dbusername, $password, array(
+        PDO::MYSQL_ATTR_LOCAL_INFILE => true,
+    ));
 } catch (PDOException $ex) {
     $this_file = __FILE__;
     $this_line = __LINE__;

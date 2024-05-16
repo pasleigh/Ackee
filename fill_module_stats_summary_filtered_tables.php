@@ -292,7 +292,21 @@ if ($access) {
             // 2 - for each module loop through the activities and find all the entries for that activity
             //
             $module_table_name = $rec[0];
-            SetFilterFlags($db,$module_table_name,$low_attendance_value[$id], $low_numbers_value[$id]);
+
+
+            // These have not been setup properlly to coordinat wi the raw data in params
+            // so need this check/hack
+            if(array_key_exists($id,$low_attendance_value)){
+                $low_att_v = $low_attendance_value[$id];
+            }else{
+                $low_att_v = 0;
+            }
+            if(array_key_exists($id,$low_numbers_value)){
+                $low_num_v = $low_numbers_value[$id];
+            }else{
+                $low_num_v = 0;
+            }
+            SetFilterFlags($db,$module_table_name,$low_att_v, $low_num_v);
 
             $display_block .= $module_table_name  . " - " . $rec[0]. "<BR>";
             //`school_short_name` varchar(10) NOT NULL,

@@ -202,7 +202,7 @@ function create_params_table_structure($db)
       `num_students` int(11) DEFAULT '0',
       `visible` int(1) DEFAULT '1',
       PRIMARY KEY (`id`)
-    ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+    ) ENGINE=MyISAM DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
 SQL;
     try {
         $db->query($query);
@@ -641,7 +641,7 @@ function create_student_module_table_structure($db, $school_short_name, $year, $
       `mean_module_attendance` float DEFAULT NULL,
 SQL;
 
-    for ($i = 0; $i <= 25; $i++) {
+    for ($i = 0; $i <= 35; $i++) {
         $query .= "`w$i` float DEFAULT NULL,";
     }
     $query .= "PRIMARY KEY (`id`)) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;";
@@ -679,7 +679,7 @@ function create_student_module_filtered_table_structure($db, $school_short_name,
       `mean_module_attendance` float DEFAULT NULL,
 SQL;
 
-    for ($i = 0; $i <= 25; $i++) {
+    for ($i = 0; $i <= 35; $i++) {
         $query .= "`w$i` float DEFAULT NULL,";
     }
     $query .= "PRIMARY KEY (`id`)) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;";
@@ -717,7 +717,7 @@ function create_student_module_filtered_small_table_structure($db, $school_short
       `mean_module_attendance` float DEFAULT NULL,
 SQL;
 
-    for ($i = 0; $i <= 25; $i++) {
+    for ($i = 0; $i <= 35; $i++) {
         $query .= "`w$i` float DEFAULT NULL,";
     }
     $query .= "PRIMARY KEY (`id`)) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;";
@@ -952,7 +952,7 @@ function create_module_stats_table_structure($db, $table_name, $delete = 0)
       `mean` float DEFAULT NULL,
 SQL;
 
-    for ($i = 0; $i <= 25; $i++) {
+    for ($i = 0; $i <= 35; $i++) {
         $query .= "`w$i` float DEFAULT NULL,";
     }
     $query .= "PRIMARY KEY (`module_code`)) ENGINE=InnoDB DEFAULT CHARSET=latin1;";
@@ -1070,7 +1070,7 @@ function create_raw_data_table_version($db, $table_name, $version)
           `SWRACST_OVER_ABSENCE` int(11) NOT NULL,
           `SWRACST_CONS_ABSENCE_2` int(11) NOT NULL,
           `SWRACST_OVER_ABSENCE_2` int(11) NOT NULL
-        ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+        ) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1;
 SQL;
     } elseif ($version == 2) {
         // The original civil format - more raw data
@@ -1086,7 +1086,7 @@ SQL;
           `sid` text NOT NULL,
           `student_name` text NOT NULL,
           `student_family_name` text NOT NULL
-        ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+        ) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1;
 SQL;
 
     }

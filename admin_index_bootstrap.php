@@ -121,21 +121,21 @@ if ($access) {
 
         $display_block .= "<div class='row'>";
         $display_block .= "<div class='col-xs-6'>";
-        $display_block .= "<A href='./csv2mysql.php'  class='btn btn-primary btn-block'>-1 - Upload/edit mark sheets</A>\n";
-        $display_block .= "<a href='./create_module_summary_tables.php?pm_id=$pm_id'  class='btn btn-primary btn-block'>0 - Create the module tables from raw data</a>\n";
-        $display_block .= "<a href='./create_and_fill_universal_raw_tables.php?pm_id=$pm_id'  class='btn btn-primary btn-block'>1 - Create and fill universal raw table</a>\n";
-        $display_block .= "<a href='./fill_module_summary_tables.php?pm_id=$pm_id'  class='btn btn-primary btn-block'>2 - Populate the module tables from raw data</a>\n";
-        $display_block .= "<a href='./fill_module_stats_summary_tables.php?pm_id=$pm_id'  class='btn btn-primary btn-block'>3 - Populate the module statistics tables </a>\n";
-        $display_block .= "<a href='./create_and_fill_module_raw_tables.php?pm_id=$pm_id'  class='btn btn-primary btn-block'>4 - Create and fill module raw tables</a>\n";
-        $display_block .= "<a href='./create_student_list_tables.php?pm_id=$pm_id'  class='btn btn-primary btn-block'>5 - Create the student list tables from raw data</a>\n";
-        $display_block .= "<a href='./create_level_for_student_list_tables.php?pm_id=$pm_id'  class='btn btn-primary btn-block'>6 - Set the student levels</a>\n";
-        $display_block .= "<a href='./fill_weekly_data.php?pm_id=$pm_id'  class='btn btn-primary btn-block'>7 - Populate the weekly attendance data</a>\n";
+        //$display_block .= "<A href='./csv2mysql.php'  class='btn btn-primary btn-block'>-1 - Upload/edit mark sheets</A>\n";
+        $display_block .= "<a href='./create_module_summary_tables.php?pm_id=$pm_id'  class='btn btn-primary btn-block'>0 - Create the module tables from raw data (>2 mins)</a>\n";
+        $display_block .= "<a href='./create_and_fill_universal_raw_tables.php?pm_id=$pm_id'  class='btn btn-primary btn-block'>1 - Create and fill universal raw table (20 secs)</a>\n";
+        $display_block .= "<a href='./fill_module_summary_tables.php?pm_id=$pm_id'  class='btn btn-primary btn-block'>2 - Populate the module tables from raw data (>2 mins)</a>\n";
+        $display_block .= "<a href='./fill_module_stats_summary_tables.php?pm_id=$pm_id'  class='btn btn-primary btn-block'>3 - Populate the module statistics tables (1min 30secs)</a>\n";
+        $display_block .= "<a href='./create_and_fill_module_raw_tables.php?pm_id=$pm_id'  class='btn btn-primary btn-block'>4 - Create and fill module raw tables (30 secs)</a>\n";
+        $display_block .= "<a href='./create_student_list_tables.php?pm_id=$pm_id'  class='btn btn-primary btn-block'>5 - Create the student list tables from raw data (1 min)</a>\n";
+        $display_block .= "<a href='./create_level_for_student_list_tables.php?pm_id=$pm_id'  class='btn btn-primary btn-block'>6 - Set the student levels (10 secs)</a>\n";
+        $display_block .= "<a href='./fill_weekly_data.php?pm_id=$pm_id'  class='btn btn-primary btn-block'>7 - Populate the weekly attendance data (>15 mins)</a>\n";
         $display_block .= "</DIV>\n";
         $display_block .= "<div class='col-xs-6'>";
-        $display_block .= "<a href='./edit_filter_values.php?pm_id=$pm_id'  class='btn btn-info btn-block'>8.1 - Edit filter parameters</a>\n";
-        $display_block .= "<a href='./fill_module_stats_summary_filtered_tables.php?pm_id=$pm_id'  class='btn btn-info btn-block'>8.2 - Populate the <em>filtered</em> module statistics tables </a>\n";
-        $display_block .= "<a href='./create_student_list_filtered_tables.php?pm_id=$pm_id'  class='btn btn-info btn-block'>9 - Create the <em>filtered</em> student list tables from raw data</a>\n";
-        $display_block .= "<a href='./fill_filtered_weekly_data.php?pm_id=$pm_id'  class='btn btn-info btn-block'>10 - Populate the  <em>filtered</em> weekly attendance data</a>\n";
+        $display_block .= "<a href='./edit_filter_values.php?pm_id=$pm_id'  class='btn btn-info btn-block'>8.1 - Edit filter parameters (not currently functional)</a>\n";
+        $display_block .= "<a href='./fill_module_stats_summary_filtered_tables.php?pm_id=$pm_id'  class='btn btn-info btn-block'>8.2 - Populate the <em>filtered</em> module statistics tables (5 secs)</a>\n";
+        $display_block .= "<a href='./create_student_list_filtered_tables.php?pm_id=$pm_id'  class='btn btn-info btn-block'>9 - Create the <em>filtered</em> student list tables from raw data (10 secs)</a>\n";
+        $display_block .= "<a href='./fill_filtered_weekly_data.php?pm_id=$pm_id'  class='btn btn-info btn-block'>10 - Populate the  <em>filtered</em> weekly attendance data (>15 mins)</a>\n";
         //$display_block .= "<a href='./todo.php'  class='btn btn-info btn-block'>not functional yet</a>\n";
         $display_block .= "</DIV>\n";
         $display_block .= "</DIV>\n";
@@ -152,7 +152,7 @@ if ($access) {
 
         $display_block .= "<div class='row'>";
         $display_block .= "<div class='col-xs-12'>";
-        $display_block .= "<a href='./delete_module_tables.php?pm_id=$pm_id'  class='btn btn-warning btn-block'>DELETE ALL DATA  - DO NOT DO THIS UNLESS YOUARE RESETTING THE SYSTEM. There is NO second chance</a>\n";
+        $display_block .= "<a href='./delete_module_tables.php?pm_id=$pm_id'  class='btn btn-warning btn-block'>DELETE ALL DATA  - DO NOT DO THIS UNLESS YOU ARE RESETTING THE SYSTEM. There is NO second chance</a>\n";
         $display_block .= "</DIV>\n";
         $display_block .= "</DIV>\n";
 

@@ -70,9 +70,22 @@ if (true) {
         $year_list_options .= "<option $selected value='$id'>$year_list_desc</option>\n";
     }
 
+    // These have not been setup properlly to coordinat wi the raw data in params
+    // so need this check/hack
+    if(array_key_exists($id,$low_attendance_value)){
+        $low_att_v = $low_attendance_value[intval($id)];
+    }else{
+        $low_att_v = 0;
+    }
+    if(array_key_exists($id,$low_numbers_value)){
+        $low_num_v = $low_numbers_value[intval($id)];
+    }else{
+        $low_num_v = 0;
+    }
+
 // Display the dropdowns to select the module and year
     $display_block .= "<h2><em>Filtered large class</em> data. Detailed Student plots</H2>";
-    $display_block .= "<div id='filter' style='visibility: hidden;'><h3>Showing data for sessions with class size >" . $low_numbers_value[intval($id)] . " and attendance > " . $low_attendance_value[intval($id)] ."% </h3></div>";
+    $display_block .= "<div id='filter' style='visibility: hidden;'><h3>Showing data for sessions with class size >" . $low_num_v . " and attendance > " . $low_att_v ."% </h3></div>";
     $display_block .= "<h2> Choose a School / Session / Level that you want to see the modules for<BR>\n";
     $display_block .= "Then select the student to show their attendance histories</H2>\n";
 
@@ -210,9 +223,9 @@ if (true) {
         // Set the pm_id as a cookie. Set for 7 days
         var days = 7; var seconds = days*24*60*60;
         docCookies.setItem("pm_id", pm_id, seconds)
-        var low_attendance_value = <?php echo json_encode($low_attendance_value); ?>;
-        var low_numbers_value = <?php echo json_encode($low_numbers_value); ?>;
-        $("#filter").html("<h3>Showing data for sessions with class size > " + low_numbers_value[pm_id] + " and attendance > " + low_attendance_value[pm_id] + "%");
+        var low_attendance_value = <?php echo json_encode($low_att_v); ?>;
+        var low_numbers_value = <?php echo json_encode($low_num_v); ?>;
+        $("#filter").html("<h3>Showing data for sessions with class size > " + low_numbers_value + " and attendance > " + low_attendance_value + "%");
         $("#filter").css('visibility', 'visible');
         var year = 201617;
         $('#container').html('');// clear

@@ -191,15 +191,20 @@ if ($access) {
                 }
                 // Write the attendance stats to the
                 $query = "UPDATE $student_module_table SET w$i='$attend_pc' WHERE id='$id' ";
-                try {
-                    $results = $db->query($query);
-                } catch (PDOException $ex) {
-                    $this_function = __FUNCTION__;
-                    echo "An Error occured accessing the database in function: $this_function <BR>\n";
-                    echo(" Query = $query<BR> \n");
-                    echo(" Err message: " . $ex->getMessage() . "<BR>\n");
-                    exit();
-                }
+                // Check that the column exists
+                //if ( $col_check_result = $db->query( "SHOW COLUMNS FROM $student_module_table LIKE 'w$i'" ) ) {
+                    //if ( $col_check_result->rowCount() > 0 ) {
+                        try {
+                            $results = $db->query($query);
+                        } catch (PDOException $ex) {
+                            $this_function = __FUNCTION__;
+                            echo "An Error occured accessing the database in function: $this_function <BR>\n";
+                            echo(" Query = $query<BR> \n");
+                            echo(" Err message: " . $ex->getMessage() . "<BR>\n");
+                            exit();
+                        }
+                    //}
+                //}
 
             }
 

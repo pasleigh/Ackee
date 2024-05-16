@@ -53,12 +53,15 @@ try{
                   `header_image_name` varchar(50) NOT NULL,
                   `running_title` varchar(50) NOT NULL,
                   `running_subtitle` varchar(50) NOT NULL,
+                  `year` int(11) NOT NULL,
+                  `raw_data_issue` int(11) NOT NULL,
+                  `raw_data_version` int(11) NOT NULL,
                   PRIMARY KEY (`id`)
                 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
             ";
 
-    $initial_data_query = "INSERT INTO `$definition_table_name` (`id`, `school_short_name`, `school_title`, `default_module_prefix`, `header_image_name`, `running_title`, `running_subtitle`) VALUES
-            (1, 'civil', 'Civil Engineering', 'CIVE', 'leeds_eng_header.png', 'AcKee', 'View Attendance Records');";
+    $initial_data_query = "INSERT INTO `$definition_table_name` (`id`, `school_short_name`, `school_title`, `default_module_prefix`, `header_image_name`, `running_title`, `running_subtitle`, `year`, `raw_data_issue`, `raw_data_version`) VALUES
+            (1, 'civil', 'Civil Engineering', 'CIVE', 'leeds_eng_header.png', 'AcKee', 'View Attendance Records', '2016', '1', '2');";
 
     try {
         $setup = $db->prepare($create_table_query);
@@ -87,7 +90,10 @@ try{
         $display_block .= "$table_name table created<BR>\n";
     }
     // Put some temporary data in the params table
-    $query = "INSERT INTO $table_name (year_begin,year_end) VALUES (2015,2016)  ";
+    $query = "INSERT INTO $table_name (year_begin,year_end,
+                   `term_1_sunday_start`,`term_1_num_weeks`,`term_2_sunday_start`,`term_2_num_weeks`,
+                   `term_3_sunday_start`,`term_3_num_weeks`,`num_modules`,`num_years`,`num_students`,`visible`) 
+                VALUES (2016,2017,'2016-09-25','11','2017-01-08',10,'2017-04-16',10,0,0,0,1)  ";
     try {
         $db->query($query);
     } catch (PDOException $ex) {
@@ -334,7 +340,7 @@ if ($POST_OP == "") {
 
     $display_block .= "<BR><hr>\n";
 
-    $display_block .= "<P>If the above looks right, let's go on to enter some data  </P><P><A href=\"./admin_index.php\">Admin index</A></P><BR><hr>\n";
+    $display_block .= "<P>If the above looks right, let's go on to enter some data  </P><P><A href=\"./admin_index_bootstrap.php\">Admin index</A></P><BR><hr>\n";
 }// end of if ($POST_OP == "edit")
 
 

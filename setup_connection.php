@@ -87,13 +87,13 @@ if (empty($db)) {
 }
 
 // Does the definition table exist?
-$table_name = "definition";
+$definition_table_name = "definition";
 try {
     // this will raise an exception if the table does not exist
-    $query = "DESCRIBE $table_name";
+    $query = "DESCRIBE $definition_table_name";
     $db->query($query);
 
-    $query = "SELECT * from $table_name LIMIT 1"; // Only want the first (there should only be one!)
+    $query = "SELECT * from $definition_table_name LIMIT 1"; // Only want the first (there should only be one!)
     $setup = $db->prepare($query);
     $setup->execute();
     $rows = $setup->fetchAll();
@@ -118,6 +118,7 @@ try {
     //echo "$table_name doesn't exist in database $dbName\n";
     //
     if (empty($first_use)) {
-        echo("<DIV>This appers to be the first time this site has been used. <BR>Go here to setup the database: <a href='./admin_first_use.php'>First use setup</a>");
+        echo("<DIV>This appears to be the first time this site has been used. <BR>Go here to setup the database: <a href='./admin_first_use.php'>First use setup</a>");
+        exit();
     }
 }

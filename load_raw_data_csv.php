@@ -4,6 +4,7 @@
 (@include_once("./setup_params.php")) OR die("Cannot find this file to include: setup_params.php<BR>");
 
 (@include_once("./connect_pdo.php")) OR die("Cannot connect to the database<BR>");
+(@include_once("./table_functions.php")) OR die("Cannot find this file to include: table_functions.php<BR>");
 
 (@include_once("./ackee_header.php")) OR die("Cannot find this file to include: ackee_header.php<BR>");
 /*
@@ -19,6 +20,10 @@ ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
 ini_set('display_errors', 1);
 
+$school_name_raw = "";
+if (array_key_exists('school_name', $_POST)) {
+    $school_name_raw = $_POST['school_name'];
+}
 $school_short_name_raw = "";
 if (array_key_exists('school_short_name', $_POST)) {
     $school_short_name_raw = $_POST['school_short_name'];
@@ -43,32 +48,76 @@ if (array_key_exists('filename', $_POST)) {
 $display_block = "";
 if (array_key_exists('op', $_POST)) {
     if($_POST['op']='read_raw_data'){
-        $table_name_raw = GetRawDataTableName($school_short_name_raw,$year_raw,$issue_raw,$version_raw);
+        if(($school_short_name_raw != "")&&($year_raw!="")&&($issue_raw!="")&&($version_raw!="")) {
+            $table_name_raw = GetRawDataTableName($school_short_name_raw, $year_raw, $issue_raw, $version_raw);
+            create_raw_data_table_version($db, $table_name_raw, $version_raw);
 
-        if($version_raw == 1 ){
-            // Create table version 1
-        }else if($version_raw == 2 ){
-            // Create table version 2
-        }else{
-            // abort and issue error
+            if ($version_raw == 1) {
+                // Create table version 1
+            } else if ($version_raw == 2) {
+                // Create table version 2
+            } else {
+                // abort and issue error
+            }
+            $query = 'LOAD DATA LOCAL INFILE \''.$filename_raw.'\'
+                        INTO TABLE '.$table_name_raw.'
+                        FIELDS TERMINATED BY \',\'
+                        LINES TERMINATED BY \'\n\'';
+
+            try {
+                $results = $db->query($query);
+            } catch (PDOException $ex) {
+                $this_function = __FUNCTION__;
+                echo "An Error occured accessing the database in function: $this_function <BR>\n";
+                echo(" Query = $query<BR> \n");
+                echo(" Err message: " . $ex->getMessage() . "<BR>\n");
+                exit();
+            }
+
+            // add a primary key
+            $query = "ALTER TABLE $table_name_raw ADD COLUMN `id` int(10) UNSIGNED PRIMARY KEY AUTO_INCREMENT";
+            try {
+                $results = $db->query($query);
+            } catch (PDOException $ex) {
+                $this_function = __FUNCTION__;
+                echo "An Error occured accessing the database in function: $this_function <BR>\n";
+                echo(" Query = $query<BR> \n");
+                echo(" Err message: " . $ex->getMessage() . "<BR>\n");
+                exit();
+            }
+
+            // delete the first row as it is a header line from the csv file
+            $query = "DELETE FROM $table_name_raw WHERE id=1";
+            try {
+                $results = $db->query($query);
+            } catch (PDOException $ex) {
+                $this_function = __FUNCTION__;
+                echo "An Error occured accessing the database in function: $this_function <BR>\n";
+                echo(" Query = $query<BR> \n");
+                echo(" Err message: " . $ex->getMessage() . "<BR>\n");
+                exit();
+            }
+
+            // Add entry to definition
+            $query = "INSERT INTO $definition_table_name 
+                        (school_short_name, school_title, default_module_prefix, header_image_name, running_title, running_subtitle, year, raw_data_issue, raw_data_version)
+                        VALUES
+                            ('$school_short_name_raw', '$school_name_raw', 
+                             'CIVE', 'leeds_eng_header.png', 'AcKee', 'View Attendance Records', 
+                             '$year_raw', '$issue_raw', '$version_raw')";
+            //echo($query);
+            //exit();
+            try {
+                $results = $db->query($query);
+            } catch (PDOException $ex) {
+                $this_function = __FUNCTION__;
+                echo "An Error occured accessing the database in function: $this_function <BR>\n";
+                echo(" Query = $query<BR> \n");
+                echo(" Err message: " . $ex->getMessage() . "<BR>\n");
+                exit();
+            }
+            // And to params if needed
         }
-        $query = "LOAD DATA LOCAL INFILE '.$filename_raw.'
-        INTO TABLE '.$table_name_raw.'
-        FIELDS TERMINATED by \',\'
-        LINES TERMINATED BY \'\n\'";
-
-        try {
-            $results = $db->query($query);
-        } catch (PDOException $ex) {
-            $this_function = __FUNCTION__;
-            echo "An Error occured accessing the database in function: $this_function <BR>\n";
-            echo(" Query = $query<BR> \n");
-            echo(" Err message: " . $ex->getMessage() . "<BR>\n");
-            exit();
-        }
-
-        // Add entry to definition
-        // And to params if needed
     }
 }
 if(isset($_POST['username'])&&isset($_POST['mysql'])&&isset($_POST['db'])&&isset($_POST['username']))
@@ -163,42 +212,58 @@ if ($access) {
         </br>
         <form class="form-horizontal" action="<?php  echo($_SERVER["PHP_SELF"]);?>" method="post">
             <div class="form-group">
-                <label for="mysql" class="control-label col-xs-2">Mysql Server address (or)<br>Host name</label>
+                <label for="school_name" class="control-label col-xs-2">School long name <BR>(e.g. Civil Engineering)</label>
                 <div class="col-xs-3">
-                    <input type="text" class="form-control" name="mysql" id="mysql" placeholder="">
+                    <input type="text" class="form-control" name="school_name" id="school_name" value="Civil Engineering">
                 </div>
             </div>
             <div class="form-group">
-                <label for="username" class="control-label col-xs-2">Username</label>
+                <label for="school_short_name" class="control-label col-xs-2">School short name <BR>(e.g. Civil)</label>
                 <div class="col-xs-3">
-                    <input type="text" class="form-control" name="username" id="username" placeholder="">
+                    <input type="text" class="form-control raw_data" name="school_short_name" id="school_short_name" value="Civil">
                 </div>
             </div>
             <div class="form-group">
-                <label for="password" class="control-label col-xs-2">Password</label>
+                <label for="year" class="control-label col-xs-2">Year start <BR>(year of the start of the academic session)</label>
                 <div class="col-xs-3">
-                    <input type="text" class="form-control" name="password" id="password" placeholder="">
+                    <input type="text" class="form-control raw_data" name="year" id="year" value="2016">
                 </div>
             </div>
             <div class="form-group">
-                <label for="db" class="control-label col-xs-2">Database name</label>
-                <div class="col-xs-3">
-                    <input type="text" class="form-control" name="db" id="db" placeholder="">
+                <label for="issue" class="control-label col-xs-2">Data issue number <BR>(e.g. normally 1, but 2, 3, etc. for other versions for the same school)
+                </label>
+                <div class="col-xs-1">
+                    <input type="number" class="form-control raw_data" name="issue" id="issue" min="1" value="1" placeholder="">
                 </div>
             </div>
 
             <div class="form-group">
-                <label for="table" class="control-label col-xs-2">table name</label>
-                <div class="col-xs-3">
-                    <input type="name" class="form-control" name="table" id="table">
+                <label for="version" class="control-label col-xs-2">Data format version <BR>(1 or 2)</label>
+                <div class="col-xs-1">
+                    <input type="number" class="form-control raw_data" name="version" id="version" min="1" max="2" value="2">
                 </div>
+
             </div>
-            <div class="form-group">
-                <label for="csvfile" class="control-label col-xs-2">Name of the file</label>
+            <input type="checkbox" id="toggle_header_images" > Show images of the header for each format version  of the data
+            <div id="header_images" style="display: none; border: 1px solid black;padding: 5px">
+                <h4>This is the header of the csv file for version 1</h4>
+                <img src="./images/v1_data_format.png"/><BR>
+                <h4>This is the header of the csv file for version 2</h4>
+                <img src="./images/v2_data_format.png"/>
+            </div>
+
+            <div class="form-group" style="margin-top: 20px;">
+                <label for="raw_data_tablename" class="control-label col-xs-2">Database table name</label>
                 <div class="col-xs-3">
-                    <input type="name" class="form-control" name="csv" id="csv">
+                    <input type="text" class="form-control" name="raw_data_tablename" id="raw_data_tablename" value="attend_raw_..." disabled>
                 </div>
-                eg. MYDATA.csv
+
+            </div>
+            <div class="form-group" style="margin-top: 20px;">
+                <label for="filename" class="control-label col-xs-2">The CSV file to import</label>
+                <div class="col-xs-6">
+                    <input type="file" accept="text/csv" class="form-control" name="filename" id="filename">
+                </div>
             </div>
             <div class="form-group">
                 <label for="login" class="control-label col-xs-2"></label>
@@ -218,7 +283,29 @@ if ($access) {
         <p class="text-muted">If you have any questions, contact Andrew Sleigh: P.A.Sleigh@leeds.ac.uk</p>
     </div>
 </footer>
+<script>
+        $(document).ready(function() {
+            $("#toggle_header_images").click(function() {
+                $("#header_images").toggle()
+            });
 
+            $('.raw_data').on("keyup change", function () {
+                // Do magical things
+                //let school_name = $("#school_name").value()
+                make_and_load_database_tablename();
+            });
+
+            function make_and_load_database_tablename(){
+                let school_short_name = $("#school_short_name").val()
+                let year_begin = $("#year").val()
+                let issue = $("#issue").val()
+                let version = $("#version").val()
+                let database_tablename = `attend_raw_${school_short_name}_${year_begin}_i${issue}_v${version}`
+                $("#raw_data_tablename").val(database_tablename)
+            }
+            make_and_load_database_tablename();
+        });
+</script>
 </body>
 
 
