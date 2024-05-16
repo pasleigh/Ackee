@@ -21,6 +21,7 @@
             max-width: 1500px;
             min-width: 300px;
             margin: auto;
+            height: 600px;
         }
         table,
         th,
@@ -42,6 +43,12 @@
 </div>
 </body>
 <script>
+    let mColor = "#000000",
+        qColor = "#0000CD",
+        medianColor = "#DC143C";
+        meanColor = "#AAEE00";
+    let animationDurantion = 2000;
+
     Highcharts.getJSON(
         "https://raw.githubusercontent.com/mekhatria/demo_highcharts/master/viloinData.json?callback=?",
         function (dataJson) {
@@ -81,6 +88,7 @@
             );
 
             //Structure the data to create the chart
+            let chartsNbr = data.results.length;
             let xi = data.xiData;
             let stat = data.stat;
             let violin1 = data.results[0],
@@ -88,24 +96,67 @@
                 violin3 = data.results[2],
                 violin4 = data.results[3];
 
+            let statData = [];
+            stat.forEach((e, i) => {
+                statData.push([]);
+                statData[i].push(
+                    { x: stat[i][0], y: i, name: "Min", marker: { fillColor: mColor } },
+                    {
+                        y: i,
+                        x: stat[i][1],
+                        name: "Q1",
+                        marker: { fillColor: qColor, radius: 4 }
+                    },
+                    {
+                        y: i,
+                        x: stat[i][2],
+                        name: "Median",
+                        marker: { fillColor: medianColor, radius: 5 }
+                    },
+                    {
+                        y: i,
+                        x: stat[i][3],
+                        name: "Q3",
+                        marker: { fillColor: qColor, radius: 4 }
+                    },
+                    { y: i, x: stat[i][4], name: "Max", marker: { fillColor: mColor } }
+                );
+            });
+
+            let statCoef = [];
+            for (col = 0; col < 5+1; col++) { // +1 for the mean
+                statCoef.push([]);
+                for (line = 0; line < chartsNbr; line++) {
+                    statCoef[col].push([(stat[line][col]), (line)]);
+
+                }
+            }
+            console.log(statCoef);
+
             Highcharts.chart("container", {
                 chart: {
                     type: "areasplinerange",
-                    inverted: true
+                    inverted: true,
+                    animation: true
                 },
                 title: {
                     text: "The 2012 Olympic male athletes weight"
                 },
                 xAxis: {
                     reversed: false,
-                    labels: { format: "{value} kg" }
+                    labels: {
+                        format: "{value} kg",
+                        style: {
+                            fontSize: "10px"
+                        }
+                    }
                 },
 
                 yAxis: {
                     title: { text: null },
                     categories: ["Rowing", "Taekwondo", "Triathlon", "Fencing"],
-                    startOnTick:false,
-                    endOnTick:false,
+                    min: 0,
+                    max: data.results.length - 1,
                     gridLineWidth: 0
                 },
                 tooltip: {
@@ -133,23 +184,42 @@
                 },
                 plotOptions: {
                     series: {
-                        marker: {
-                            enabled: false
-                        },
                         states: {
                             hover: {
                                 enabled: false
                             }
                         },
-                        pointStart: xi[0],
                         events: {
                             legendItemClick: function (e) {
                                 e.preventDefault();
                             }
                         }
+                    },
+                    areasplinerange: {
+                        marker: {
+                            enabled: false
+                        },
+                        pointStart: xi[0],
+                        animation: {
+                            duration: animationDurantion
+                        }
+                    },
+                    line: {
+                        marker: {
+                            enabled: false
+                        },
+                        showInLegend: false,
+                        color: "#232b2b",
+                        lineWidth: 1,
+                        dashStyle: "shortdot"
+                    },
+                    scatter: {
+                        marker: {
+                            enabled: true,
+                            symbol: "diamond"
+                        }
                     }
                 },
-
                 series: [
                     {
                         name: "Rowing",
@@ -170,6 +240,62 @@
                         name: "Fencing",
                         color: "#46f15f",
                         data: violin4
+                    },
+                    {
+                        type: "line",
+                        data: statData[0]
+                    },
+                    {
+                        type: "line",
+                        data: statData[1]
+                    },
+                    {
+                        type: "line",
+                        data: statData[2]
+                    },
+                    {
+                        type: "line",
+                        data: statData[3]
+                    },
+                    {
+                        type: "line",
+                        data: statData[4]
+                    },
+                    {
+                        type: "scatter",
+                        data: statCoef[0],
+                        name: "Min",
+                        color: mColor
+                    },
+                    {
+                        type: "scatter",
+                        data: statCoef[1],
+                        name: "Q 1",
+                        color: qColor
+                    },
+                    {
+                        type: "scatter",
+                        data: statCoef[2],
+                        name: "Median",
+                        color: medianColor
+                    },
+                    {
+                        type: "scatter",
+                        data: statCoef[3],
+                        name: "Q 3",
+                        color: qColor
+                    },
+                    {
+                        type: "scatter",
+                        data: statCoef[4],
+                        name: "Max",
+                        color: mColor
+                    },
+                    {
+                        type: "scatter",
+                        data: statCoef[5],
+                        name: "Mean",
+                        color: meanColor
                     }
                 ]
             });
